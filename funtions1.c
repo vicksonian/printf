@@ -14,25 +14,25 @@
  */
 int custom_print_unsigned(va_list data, char buffer[], int flags, int width, int precision, int size)
 {
-    int i = BUFF_SIZE - 2;
-    unsigned long int num = va_arg(data, unsigned long int);
+int i = BUFF_SIZE - 2;
+unsigned long int num = va_arg(data, unsigned long int);
 
-    num = convert_size_unsgnd(num, size);
+num = convert_size_unsgnd(num, size);
 
-    if (num == 0)
-        buffer[i--] = '0';
+if (num == 0)
+buffer[i--] = '0';
 
-    buffer[BUFF_SIZE - 1] = '\0';
+buffer[BUFF_SIZE - 1] = '\0';
 
-    while (num > 0)
-    {
-        buffer[i--] = (num % 10) + '0';
-        num /= 10;
-    }
+while (num > 0)
+{
+buffer[i--] = (num % 10) + '0';
+num /= 10;
+}
 
-    i++;
+i++;
 
-    return write_unsgnd(0, i, buffer, flags, width, precision, size);
+return write_unsgnd(0, i, buffer, flags, width, precision, size);
 }
 
 /**
@@ -49,31 +49,31 @@ int custom_print_unsigned(va_list data, char buffer[], int flags, int width, int
  */
 int custom_print_octal(va_list data, char buffer[], int flags, int width, int precision, int size)
 {
-    int i = BUFF_SIZE - 2;
-    unsigned long int num = va_arg(data, unsigned long int);
-    unsigned long int init_num = num;
+int i = BUFF_SIZE - 2;
+unsigned long int num = va_arg(data, unsigned long int);
+unsigned long int init_num = num;
 
-    UNUSED(width);
+UNUSED(width);
 
-    num = convert_size_unsgnd(num, size);
+num = convert_size_unsgnd(num, size);
 
-    if (num == 0)
-        buffer[i--] = '0';
+if (num == 0)
+buffer[i--] = '0';
 
-    buffer[BUFF_SIZE - 1] = '\0';
+buffer[BUFF_SIZE - 1] = '\0';
 
-    while (num > 0)
-    {
-        buffer[i--] = (num % 8) + '0';
-        num /= 8;
-    }
+while (num > 0)
+{
+buffer[i--] = (num % 8) + '0';
+num /= 8;
+}
 
-    if (flags & F_HASH && init_num != 0)
-        buffer[i--] = '0';
+if (flags & F_HASH && init_num != 0)
+buffer[i--] = '0';
 
-    i++;
+i++;
 
-    return write_unsgnd(0, i, buffer, flags, width, precision, size);
+return (write_unsgnd(0, i, buffer, flags, width, precision, size));
 }
 
 /**
@@ -88,14 +88,15 @@ int custom_print_octal(va_list data, char buffer[], int flags, int width, int pr
  *
  * Return: Number of chars printed
  */
-int custom_print_hexadecimal(va_list data, char buffer[], int flags, int width, int precision, int size)
+int custom_print_hexadecimal(va_list data, char buffer[], 
+int flags, int width, int precision, int size)
 {
-    return custom_print_hexa(data, "0123456789abcdef", buffer, flags, 'x', width, precision, size);
+return (custom_print_hexa(data, "0123456789abcdef", buffer, flags, 'x', width, precision, size));
 }
 
 /**
- * custom_print_hexa_upper - Prints an unsigned number in upper hexadecimal notation
- *
+ * custom_print_hexa_upper - Prints an unsigned 
+ * number in upper hexadecimal notation
  * @data: List of arguments
  * @buffer: Buffer to handle print
  * @flags: Active flags
@@ -105,9 +106,10 @@ int custom_print_hexadecimal(va_list data, char buffer[], int flags, int width, 
  *
  * Return: Number of chars printed
  */
-int custom_print_hexa_upper(va_list data, char buffer[], int flags, int width, precision, int size)
+int custom_print_hexa_upper(va_list data, char buffer[], int flags,
+int width, precision, int size)
 {
-    return custom_print_hexa(data, "0123456789ABCDEF", buffer, flags, 'X', width, precision, size);
+return (custom_print_hexa(data, "0123456789ABCDEF", buffer, flags, 'X', width, precision, size));
 }
 
 /**
@@ -124,35 +126,36 @@ int custom_print_hexa_upper(va_list data, char buffer[], int flags, int width, p
  *
  * Return: Number of chars printed
  */
-int custom_print_hexa(va_list data, char map_to[], char buffer[], int flags, char flag_ch, int width, int precision, int size)
+int custom_print_hexa(va_list data, char map_to[], char buffer[], 
+int flags, char flag_ch, int width, int precision, int size)
 {
-    int i = BUFF_SIZE - 2;
-    unsigned long int num = va_arg(data, unsigned long int);
-    unsigned long init_num = num;
+int i = BUFF_SIZE - 2;
+unsigned long int num = va_arg(data, unsigned long int);
+unsigned long init_num = num;
 
-    UNUSED(width);
+UNUSED(width);
 
-    num = convert_size_unsgnd(num, size);
+num = convert_size_unsgnd(num, size);
 
-    if (num == 0)
-        buffer[i--] = '0';
+if (num == 0)
+buffer[i--] = '0';
 
-    buffer[BUFF_SIZE - 1] = '\0';
+buffer[BUFF_SIZE - 1] = '\0';
 
-    while (num > 0)
-    {
-        buffer[i--] = map_to[num % 16];
-        num /= 16;
-    }
+while (num > 0)
+{
+buffer[i--] = map_to[num % 16];
+num /= 16;
+}
 
-    if (flags & F_HASH && init_num != 0)
-    {
-        buffer[i--] = flag_ch;
-        buffer[i--] = '0';
-    }
+if (flags & F_HASH && init_num != 0)
+{
+buffer[i--] = flag_ch;
+buffer[i--] = '0';
+}
 
-    i++;
+i++;
 
-    return write_unsgnd(0, i, buffer, flags, width, precision, size);
+return (write_unsgnd(0, i, buffer, flags, width, precision, size));
 }
 
