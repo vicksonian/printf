@@ -1,78 +1,106 @@
 #include "main.h"
 
 /**
- * is_printable - Evaluates if a char is printable
- * @c: Char to be evaluated.
- *
- * Return: 1 if c is printable, 0 otherwise
- */
-int is_printable(char c) {
-	if (c >= 32 && c < 127)
-		return (1);
-	return (0);
+* ascii_to_hex - Convert an ASCII character to its hexadecimal representation.
+* @c: The ASCII character to be converted.
+*
+* Return: The hexadecimal representation as a string.
+*/
+char *ascii_to_hex(char c)
+{
+static char hex[3];
+snprintf(hex, sizeof(hex), "%02X", (unsigned char)c);
+return (hex);
 }
 
 /**
- * append_hexa_code - Append ASCII in hexadecimal code to buffer
- * @buffer: Array of chars.
- * @i: Index at which to start appending.
- * @ascii_code: ASCII CODE.
- *
- * Return: Always 3
- */
-int append_hexa_code(char ascii_code, char buffer[], int i) {
-	char map_to[] = "0123456789ABCDEF";
-	/* The hexa format code is always 2 digits long */
-	if (ascii_code < 0)
-		ascii_code *= -1;
-
-	buffer[i++] = '\\';
-	buffer[i++] = 'x';
-
-	buffer[i++] = map_to[ascii_code / 16];
-	buffer[i] = map_to[ascii_code % 16];
-
-	return (3);
+* cast_to_size - Cast a numeric value to the specified size.
+* @num: The number to be casted.
+* @size: The size indicating the type to be casted.
+*
+* Return: The casted value of num.
+*/
+long int cast_to_size(long int num, int size)
+{
+switch (size)
+{
+case S_LONG:
+return (long int(num));
+case S_SHORT:
+return (short(num));
+default:
+return (int(num));
+}
 }
 
 /**
- * is_digit - Verifies if a char is a digit
- * @c: Char to be evaluated
- *
- * Return: 1 if c is a digit, 0 otherwise
- */
-int is_digit(char c) {
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+* str_to_int - Convert a string to an integer.
+* @str: The string to be converted.
+*
+* Return: The integer value, or 0 if the conversion fails.
+*/
+int str_to_int(const char *str)
+{
+if (str == NULL)
+{
+fprintf(stderr, "Error: NULL input\n");
+return (0);
+}
+
+int result = 0;
+int sign = 1;
+int i = 0;
+
+/*Handle leading '+' or '-' signs*/
+if (str[i] == '-')
+{
+sign = -1;
+i++;
+}
+else if (str[i] == '+')
+{
+i++;
+}
+
+/*Iterate through the string and build the integer*/
+while (str[i] != '\0')
+{
+if (is_digit(str[i]))
+{
+result = result * 10 + (str[i] - '0');
+i++;
+}
+else
+{
+fprintf(stderr, "Error: Non-digit character in input\n");
+return (0);
+}
+}
+
+return (sign *result);
 }
 
 /**
- * convert_size_number - Casts a number to the specified size
- * @num: Number to be casted.
- * @size: Number indicating the type to be casted.
- *
- * Return: Casted value of num
- */
-long int convert_size_number(long int num, int size) {
-	if (size == S_LONG)
-		return (num);
-	else if (size == S_SHORT)
-		return ((short)num);
-	return ((int)num);
+* is_printable - Evaluates if a char is printable.
+* @c: Char to be evaluated.
+*
+* Return: 1 if c is printable, 0 otherwise.
+*/
+int is_printable(char c)
+{
+if (c >= 32 && c < 127)
+return (1);
+else
+return (0);
 }
 
 /**
- * convert_size_unsgnd - Casts a number to the specified size
- * @num: Number to be casted
- * @size: Number indicating the type to be casted
- *
- * Return: Casted value of num
- */
-long int convert_size_unsgnd(unsigned long int num, int size) {
-	if (size == S_LONG)
-		return (num);
-	else if (size == S_SHORT)
-		return ((unsigned short)num);
-	return ((unsigned int)num);
+* is_digit - Verifies if a character is a digit.
+* @c: Char to be evaluated.
+*
+* Return: 1 if c is a digit, 0 otherwise.
+*/
+int is_digit(char c)
+{
+return (c >= '0' && c <= '9');
 }
