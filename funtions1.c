@@ -1,161 +1,55 @@
 #include "main.h"
+#include <stdarg.h>
 
 /**
- * custom_print_unsigned - Prints an unsigned number
+ * print_char - Print a character.
+ * @args: Argument list containing the character to print.
  *
- * @data: List of arguments
- * @buffer: Buffer to handle print
- * @flags: Active flags
- * @width: Width
- * @precision: Precision specification
- * @size: Size specifier
- *
- * Return: Number of chars printed.
+ * Return: Number of characters printed.
  */
-int custom_print_unsigned(va_list data, char buffer[], int flags, int width, int precision, int size)
+int print_char(va_list args)
 {
-int i = BUFF_SIZE - 2;
-unsigned long int num = va_arg(data, unsigned long int);
-
-num = convert_size_unsgnd(num, size);
-
-if (num == 0)
-buffer[i--] = '0';
-
-buffer[BUFF_SIZE - 1] = '\0';
-
-while (num > 0)
-{
-buffer[i--] = (num % 10) + '0';
-num /= 10;
-}
-
-i++;
-
-return write_unsgnd(0, i, buffer, flags, width, precision, size);
+char c = va_arg(args, int);
+return (putchar(c));
 }
 
 /**
- * custom_print_octal - Prints an unsigned number in octal notation
+ * print_octal - Print an octal number.
+ * @args: Argument list containing the octal number to print.
  *
- * @data: List of arguments
- * @buffer: Buffer to handle print
- * @flags: Active flags
- * @width: Width
- * @precision: Precision specification
- * @size: Size specifier
- *
- * Return: Number of chars printed
+ * Return: Number of characters printed.
  */
-int custom_print_octal(va_list data, char buffer[], int flags, int width, int precision, int size)
+int print_octal(va_list args)
 {
-int i = BUFF_SIZE - 2;
-unsigned long int num = va_arg(data, unsigned long int);
-unsigned long int init_num = num;
-
-UNUSED(width);
-
-num = convert_size_unsgnd(num, size);
-
-if (num == 0)
-buffer[i--] = '0';
-
-buffer[BUFF_SIZE - 1] = '\0';
-
-while (num > 0)
-{
-buffer[i--] = (num % 8) + '0';
-num /= 8;
-}
-
-if (flags & F_HASH && init_num != 0)
-buffer[i--] = '0';
-
-i++;
-
-return (write_unsgnd(0, i, buffer, flags, width, precision, size));
+unsigned int num = va_arg(args, unsigned int);
+return (printf("%o", num));
 }
 
 /**
- * custom_print_hexadecimal - Prints an unsigned number in hexadecimal notation
+ * handle_specifier - Dispatch the
+ * appropriate function for the given specifier.
+ * @specifier: The format specifier.
+ * @args: Argument list.
  *
- * @data: List of arguments
- * @buffer: Buffer to handle print
- * @flags: Active flags
- * @width: Width
- * @precision: Precision specification
- * @size: Size specifier
- *
- * Return: Number of chars printed
+ * Return: Number of characters printed.
  */
-int custom_print_hexadecimal(va_list data, char buffer[], 
-int flags, int width, int precision, int size)
+int handle_specifier(const char *specifier, va_list args)
 {
-return (custom_print_hexa(data, "0123456789abcdef", buffer, flags, 'x', width, precision, size));
+switch (*specifier)
+{
+case 'd':
+return (print_int(args));
+case 's':
+return (print_string(args));
+case 'c':
+return (print_char(args));
+case 'x':
+return (print_hex(args));
+default:
+putchar('%');
+putchar(*specifier);
+return (2);
+}
 }
 
-/**
- * custom_print_hexa_upper - Prints an unsigned 
- * number in upper hexadecimal notation
- * @data: List of arguments
- * @buffer: Buffer to handle print
- * @flags: Active flags
- * @width: Width
- * @precision: Precision specification
- * @size: Size specifier
- *
- * Return: Number of chars printed
- */
-int custom_print_hexa_upper(va_list data, char buffer[], int flags,
-int width, precision, int size)
-{
-return (custom_print_hexa(data, "0123456789ABCDEF", buffer, flags, 'X', width, precision, size));
-}
-
-/**
- * custom_print_hexa - Prints a hexadecimal number in lower or upper
- *
- * @data: List of arguments
- * @map_to: Array of values to map the number to
- * @buffer: Buffer to handle print
- * @flags: Active flags
- * @flag_ch: Active flags
- * @width: Width
- * @precision: Precision specification
- * @size: Size specifier
- *
- * Return: Number of chars printed
- */
-int custom_print_hexa(va_list data, char map_to[], char buffer[], 
-int flags, char flag_ch, int width, int precision, int size)
-{
-int i = BUFF_SIZE - 2;
-unsigned long int num = va_arg(data, unsigned long int);
-unsigned long init_num = num;
-
-UNUSED(width);
-
-num = convert_size_unsgnd(num, size);
-
-if (num == 0)
-buffer[i--] = '0';
-
-buffer[BUFF_SIZE - 1] = '\0';
-
-while (num > 0)
-{
-buffer[i--] = map_to[num % 16];
-num /= 16;
-}
-
-if (flags & F_HASH && init_num != 0)
-{
-buffer[i--] = flag_ch;
-buffer[i--] = '0';
-}
-
-i++;
-
-return (write_unsgnd(0, i, buffer, flags, width, precision, size));
-}
 
