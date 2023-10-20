@@ -1,34 +1,61 @@
 #include "main.h"
 
 /**
- * get_flags - Calculate active flags
- * @format: Formatted string for printing arguments
- * @i: Current index in format
- * 
- * Return: Flags:
+ * init_precision - Initialize precision to its default value.
+ * @precision: A pointer to the Precision struct to be initialized.
+ *
+ * This function sets the specified flag to 0 and the value to 0.
  */
-int get_flags(const char *format, int *i)
+void init_precision(Precision *precision)
 {
-    int j, curr_i;
-    int flags = 0;
-    const char FLAGS_CH[] = {'-', '+', '0', '#', ' ', '\0'};
-    const int FLAGS_ARR[] = {F_MINUS, F_PLUS, F_ZERO, F_HASH, F_SPACE, 0};
+precision->specified = 0;
+precision->value = 0;
+}
 
-    for (curr_i = *i + 1; format[curr_i] != '\0'; curr_i++)
-    {
-        for (j = 0; FLAGS_CH[j] != '\0'; j++)
-            if (format[curr_i] == FLAGS_CH[j])
-            {
-                flags |= FLAGS_ARR[j];
-                break;
-            }
+/**
+ * parse_precision - Parse and set the precision based on the format specifier.
+ * @format: The format specifier to parse.
+ * @precision: A pointer to the Precision struct to store the parsed precision.
+ *
+ * This function parses the format specifier
+ * to determine the precision, if specified.
+ */
+void parse_precision(const char *format, Precision *precision)
+{
+precision->specified = 0;
+precision->value = 0;
 
-        if (FLAGS_CH[j] == 0)
-            break;
-    }
+if (*format == '.')
+{
+format++;
+precision->specified = 1;
+while (*format >= '0' && *format <= '9')
+{
+precision->value = precision->value * 10 + (*format - '0');
+format++;
+}
+}
+}
 
-    *i = curr_i - 1;
+/**
+ * is_precision_specified - Check if precision is specified.
+ * @precision: The Precision struct to check.
+ *
+ * Return: 1 if precision is specified, 0 otherwise.
+ */
+int is_precision_specified(Precision precision)
+{
+return (precision.specified);
+}
 
-    return flags;
+/**
+ * get_precision_value - Get the value of the specified precision.
+ * @precision: The Precision struct containing the precision value.
+ *
+ * Return: The value of the specified precision.
+ */
+int get_precision_value(Precision precision)
+{
+return (precision.value);
 }
 
