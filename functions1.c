@@ -10,7 +10,7 @@
 int print_char(va_list args)
 {
 char c = va_arg(args, int);
-return (putchar c);
+return (putchar(c));
 }
 
 /**
@@ -22,7 +22,7 @@ return (putchar c);
 int print_unsigned(va_list args)
 {
 unsigned int num = va_arg(args, unsigned int);
-return (printf "%u", num);
+return (printf("%u", num));
 }
 
 /**
@@ -34,9 +34,27 @@ return (printf "%u", num);
 int print_hex(va_list args)
 {
 unsigned int num = va_arg(args, unsigned int);
-return (printf "%x", num);
+return (printf("%x", num));
 }
 
+/**
+ * handle_specifier - Dispatch
+ * the appropriate function for the given specifier.
+ * @specifier: The format specifier.
+ * @args: Argument list.
+ *
+ * Return: Number of characters printed.
+ */
+int handle_specifier(const char *specifier, va_list args)
+{
+switch (*specifier)
+{
+case 'd':
+return (print_int(args));
+case 's':
+return (print_string(args));
+case 'c':
+return (print_char(args));
 default:
 putchar('%');
 putchar(*specifier);

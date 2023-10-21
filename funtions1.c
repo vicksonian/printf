@@ -37,14 +37,8 @@ int handle_specifier(const char *specifier, va_list args)
 {
 switch (*specifier)
 {
-case 'd':
-return (print_int(args));
-case 's':
-return (print_string(args));
 case 'c':
 return (print_char(args));
-case 'x':
-return (print_hex(args));
 default:
 putchar('%');
 putchar(*specifier);
