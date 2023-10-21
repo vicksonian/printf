@@ -1,46 +1,85 @@
 #include "main.h"
-/**
- * _printf - printf function
- * @format: const char pointer
- * Return: b_len
- */
 
+/**
+* _printf - Produces output according to a format
+* @format: Is a character string. The format string
+* is composed of zero or more directives
+*
+* Return: The number of characters printed (excluding
+* the null byte used to end output to strings)
+**/
 int _printf(const char *format, ...)
 {
 va_list args;
+int char_count = 0;
+
+if (format == NULL)
+return (-1);
+
 va_start(args, format);
 
-int char_count = 0;
 while (*format)
 {
 if (*format == '%')
 {
 format++;
 if (*format == '\0')
-{
 break;
-}
-if (*format == 'd')
+
+if (*format == 'c')
 {
-int num = va_arg(args, int);
-char_count += printf("%d", num);
+char c = va_arg(args, int);
+write(1, &c, 1);
+char_count++;
 }
 else if (*format == 's')
 {
 char *str = va_arg(args, char *);
-char_count += printf("%s", str);
-}
-else
+if (str)
 {
-putchar(*format);
+while (*str)
+{
+write(1, str, 1);
+str++;
 char_count++;
 }
 }
-else
+}
+else if (*format == 'd')
 {
-putchar(*format);
+int num = va_arg(args, int);
+char num_str[12];
+int num_len = snprintf(num_str, sizeof(num_str), "%d", num);
+write(1, num_str, num_len);
+char_count += num_len;
+}
+else if (*format == '%')
+{
+write(1, "%", 1);
 char_count++;
 }
+else if (*format == '0' && isdigit(*(format + 1)))
+{
+int width = atoi(format);
+while (isdigit(*(format + 1)))
+format++;
+format++;
+if (*format == 'd')
+{
+int num = va_arg(args, int);
+char num_str[12];
+int num_len = snprintf(num_str, sizeof(num_str), "%0*d", width, num);
+write(1, num_str, num_len);
+char_count += num_len;
+}
+}
+}
+else
+{
+write(1, format, 1);
+char_count++;
+}
+
 format++;
 }
 
@@ -48,20 +87,3 @@ va_end(args);
 return (char_count);
 }
 
-/**
- * main - Entry point
- *
- * This is the main function of the program. It tests the _printf function.
- *
- * Return: 0 (success)
- */
-int main(void)
-{
-int num = 42;
-char *str = "Hello, World!";
-
-int count = _printf("This is a number: %d\nThis is a string: %s\n", num, str);
-printf("Total characters printed: %d\n", count);
-
-return (0);
-}
