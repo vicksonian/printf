@@ -14,18 +14,6 @@ return (printf("%o", num));
 }
 
 /**
- * print_binary - Print a binary number.
- * @args: Argument list containing the binary number to print.
- *
- * Return: Number of characters printed.
- */
-int print_binary(va_list args)
-{
-unsigned int num = va_arg(args, unsigned int);
-return (printf("%b", num));
-}
-
-/**
  * handle_specifier - Dispatch
  * the appropriate function for the given specifier.
  * @specifier: The format specifier.
@@ -44,7 +32,7 @@ return (print_string(args));
 case 'c':
 return (print_char(args));
 case 'u':
-return (print_unsigned int(args));
+return (print_unsigned 'int' (args));
 default:
 putchar('%');
 putchar(*specifier);
