@@ -45,33 +45,10 @@ char_count++;
 }
 }
 }
-else if (*format == 'd')
-{
-int num = va_arg(args, int);
-char num_str[12];
-int num_len = snprintf(num_str, sizeof(num_str), "%d", num);
-write(1, num_str, num_len);
-char_count += num_len;
-}
 else if (*format == '%')
 {
 write(1, "%", 1);
 char_count++;
-}
-else if (*format == '0' && isdigit(*(format + 1)))
-{
-int width = atoi(format);
-while (isdigit(*(format + 1)))
-format++;
-format++;
-if (*format == 'd')
-{
-int num = va_arg(args, int);
-char num_str[12];
-int num_len = snprintf(num_str, sizeof(num_str), "%0*d", width, num);
-write(1, num_str, num_len);
-char_count += num_len;
-}
 }
 }
 else
